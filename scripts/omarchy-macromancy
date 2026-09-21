@@ -112,7 +112,7 @@ cmd_apply() {
     echo "hyprctl configerrors:" >&2
     echo "$errors" >&2
   fi
-  echo "Macromancy is on. Super+A/Z/H/Q are select-all, undo, hide, and quit."
+  echo "Macromancy is on. PC Alt (next to Space) is Command; Super+A/Z/H/Q are select-all, undo, hide, and quit."
 }
 
 cmd_unapply() {

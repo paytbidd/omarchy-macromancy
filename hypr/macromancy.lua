@@ -1,5 +1,6 @@
--- Macromancy: Mac Command muscle memory on Omarchy.
+-- Macromancy: Mac Command habits on a PC keyboard, for Omarchy.
 -- Physical Alt (next to Space) is Super. Super+C/V/X stay stock Omarchy.
+-- Do not use the Alt/Win swap on an Apple keyboard; Command is already Super.
 
 -- kb_options is replaced, not merged. Keep Omarchy compose/capslock and
 -- add altwin:swap_alt_win. Extra layout options belong here too.

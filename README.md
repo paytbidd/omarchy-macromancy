@@ -1,8 +1,16 @@
 # Macromancy
 
-Mac Command muscle memory for [Omarchy](https://omarchy.org/).
+For Mac users who came to [Omarchy](https://omarchy.org/) on **Windows / PC hardware**.
 
-The key next to Space (Alt on a PC board, Command on a Mac) becomes Super. Select all, undo, redo, hide, and quit then follow that thumb. Copy, paste, and cut are already Super+C / Super+V / Super+X in stock Omarchy; this plugin leaves those alone.
+You still reach for Command next to Space. On a PC board that key is Alt. Macromancy makes it Super, then maps the usual Cmd chords onto it. Copy, paste, and cut are already Super+C / Super+V / Super+X in stock Omarchy; this plugin leaves those alone.
+
+## Who this is for
+
+A typical Mac user on a **PC keyboard** (laptop or desktop): Alt sits next to Space, Win sits one key further out. Your thumb still wants Command there.
+
+**Not for Apple keyboards.** On a Mac board, Command is already Super. The Alt/Win swap would put Option under your Command thumb. Skip this pack, or use only the shortcut file and delete the `kb_options` swap.
+
+This is not a full macOS shortcut table. Save, Find, New Tab, and Spotlight stay Omarchy’s tiling and menu keys (Super+S / Super+F / Super+T / Super+Space).
 
 ## Install
 
