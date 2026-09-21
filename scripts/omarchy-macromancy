@@ -1,0 +1,159 @@
+#!/bin/bash
+# Wire Macromancy Hyprland binds and the Alt/Win Command swap.
+
+set -euo pipefail
+
+PLUGIN_ID="payton.macromancy"
+HYPR_MARK_BEGIN="-- omarchy-macromancy begin"
+HYPR_MARK_END="-- omarchy-macromancy end"
+
+SCRIPT_PATH=$(readlink -f "${BASH_SOURCE[0]}")
+SCRIPT_DIR=$(cd -- "$(dirname -- "$SCRIPT_PATH")" && pwd)
+PLUGIN_DIR=$(cd -- "$(dirname "$SCRIPT_DIR")" && pwd)
+CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+HYPR_DIR="$CONFIG_HOME/hypr"
+HYPRLAND_LUA="$HYPR_DIR/hyprland.lua"
+HYPR_SNIPPET="$HYPR_DIR/macromancy.lua"
+LOCAL_BIN="$HOME/.local/bin"
+
+fail() {
+  echo "omarchy-macromancy: $*" >&2
+  exit 1
+}
+
+reload_hypr() {
+  hyprctl reload >/dev/null 2>&1 || true
+}
+
+strip_hypr_marks() {
+  local begin="$1"
+  local end="$2"
+  [[ -f $HYPRLAND_LUA ]] || return 0
+  python3 - "$HYPRLAND_LUA" "$begin" "$end" <<'PY'
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+begin, end = sys.argv[2], sys.argv[3]
+lines = path.read_text().splitlines(keepends=True)
+out, skipping = [], False
+changed = False
+for line in lines:
+    if begin in line:
+        skipping = True
+        changed = True
+        continue
+    if skipping:
+        if end in line:
+            skipping = False
+        continue
+    out.append(line)
+if changed:
+    path.write_text("".join(out))
+PY
+}
+
+ensure_hypr_snippet() {
+  mkdir -p "$HYPR_DIR"
+  [[ -f $PLUGIN_DIR/hypr/macromancy.lua ]] || fail "missing $PLUGIN_DIR/hypr/macromancy.lua"
+  cp "$PLUGIN_DIR/hypr/macromancy.lua" "$HYPR_SNIPPET"
+  [[ -f $HYPRLAND_LUA ]] || fail "missing $HYPRLAND_LUA"
+  strip_hypr_marks "$HYPR_MARK_BEGIN" "$HYPR_MARK_END"
+
+  python3 - "$HYPRLAND_LUA" "$HYPR_MARK_BEGIN" "$HYPR_MARK_END" <<'PY'
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+begin, end = sys.argv[2], sys.argv[3]
+text = path.read_text().rstrip() + "\n"
+if 'require("hypr.macromancy")' not in text:
+    text = text.rstrip() + f"\n\n{begin}\nrequire(\"hypr.macromancy\")\n{end}\n"
+    path.write_text(text)
+PY
+}
+
+remove_hypr_snippet() {
+  rm -f "$HYPR_SNIPPET"
+  strip_hypr_marks "$HYPR_MARK_BEGIN" "$HYPR_MARK_END"
+}
+
+install_cli_link() {
+  mkdir -p "$LOCAL_BIN"
+  ln -sfn "$PLUGIN_DIR/scripts/omarchy-macromancy" "$LOCAL_BIN/omarchy-macromancy"
+}
+
+remove_cli_link() {
+  if [[ -L $LOCAL_BIN/omarchy-macromancy ]]; then
+    local target
+    target=$(readlink -f "$LOCAL_BIN/omarchy-macromancy" || true)
+    if [[ $target == *"/payton.macromancy/"* || $target == *"/omarchy-macromancy/"* ]]; then
+      rm -f "$LOCAL_BIN/omarchy-macromancy"
+    fi
+  fi
+}
+
+wired() {
+  [[ -f $HYPR_SNIPPET ]] && grep -q 'require("hypr.macromancy")' "$HYPRLAND_LUA" 2>/dev/null
+}
+
+cmd_status() {
+  echo "plugin:  $PLUGIN_DIR"
+  if wired; then
+    echo "wired:   yes"
+  else
+    echo "wired:   no"
+  fi
+}
+
+cmd_apply() {
+  ensure_hypr_snippet
+  install_cli_link
+  reload_hypr
+  local errors
+  errors=$(hyprctl configerrors 2>/dev/null || true)
+  if [[ -n ${errors// /} && $errors != "nothing" ]]; then
+    echo "hyprctl configerrors:" >&2
+    echo "$errors" >&2
+  fi
+  echo "Macromancy is on. Super+A/Z/H/Q are select-all, undo, hide, and quit."
+}
+
+cmd_unapply() {
+  local purge=0
+  if [[ ${1:-} == "--purge" ]]; then
+    purge=1
+  fi
+  remove_hypr_snippet
+  remove_cli_link
+  reload_hypr
+  if (( purge )); then
+    local plugins_dir="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/plugins"
+    if [[ -d $plugins_dir/$PLUGIN_ID ]]; then
+      omarchy plugin remove "$PLUGIN_ID" --yes 2>/dev/null || rm -rf "$plugins_dir/$PLUGIN_ID"
+    fi
+    echo "Removed Macromancy. Super is no longer swapped onto Alt unless input.lua still says so."
+  else
+    echo "Unapplied Macromancy. Re-apply with: $SCRIPT_DIR/omarchy-macromancy apply"
+  fi
+}
+
+usage() {
+  cat <<EOF
+Usage: omarchy-macromancy {apply|unapply [--purge]|status}
+
+  apply             Wire Hyprland binds and the Alt/Win Command swap
+  unapply           Remove wiring
+  unapply --purge   Also remove the payton.macromancy plugin
+  status            Show whether Macromancy is wired
+EOF
+}
+
+case "${1:-}" in
+  apply) cmd_apply ;;
+  unapply) cmd_unapply "${2:-}" ;;
+  status) cmd_status ;;
+  -h | --help | help | "")
+    usage
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac

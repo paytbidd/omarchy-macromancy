@@ -1,0 +1,14 @@
+#!/bin/bash
+# Remove Macromancy binds and the plugin.
+set -euo pipefail
+
+PLUGIN_ID="payton.macromancy"
+PLUGINS_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/plugins"
+SCRIPT="$PLUGINS_DIR/$PLUGIN_ID/scripts/omarchy-macromancy"
+
+if [[ -x $SCRIPT ]]; then
+  exec "$SCRIPT" unapply --purge
+fi
+
+echo "omarchy-macromancy: plugin is not installed" >&2
+exit 1

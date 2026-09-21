@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "payton.macromancy",
+  "name": "Macromancy",
+  "version": "1.0.0",
+  "author": "Payton Biddington",
+  "description": "Mac Command muscle memory on Omarchy: Alt next to Space is Super, plus select-all, undo, redo, hide, and quit.",
+  "homepage": "https://github.com/paytbidd/omarchy-macromancy",
+  "license": "MIT",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Service.qml"
+  }
+}
