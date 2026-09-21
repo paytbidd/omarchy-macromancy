@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "payton.macromancy",
   "name": "Macromancy",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Payton Biddington",
   "description": "For Mac users on PC keyboards who switched to Omarchy: Alt next to Space becomes Command (Super), plus select-all, undo, redo, hide, and quit.",
   "homepage": "https://github.com/paytbidd/omarchy-macromancy",

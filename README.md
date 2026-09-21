@@ -57,6 +57,21 @@ Ctrl is unchanged, so Emacs/readline chords stay on the Control key.
 
 These Super chords were free in stock Omarchy. Super+Shift+A (ChatGPT), Super+Ctrl+A (Audio), Super+Ctrl+Z (Zoom in), and Super+Ctrl+Q (Calculator) are unchanged.
 
+## Super+K
+
+The Omarchy keybindings menu (Super+K) reads live Hyprland binds. After apply you should see:
+
+| Menu chord | Menu label |
+|---|---|
+| Super+A | Universal select all |
+| Super+Z | Universal undo |
+| Super+Shift+Z | Universal redo |
+| Super+H | Hide window (scratchpad) |
+| Super+Q | Quit window |
+| Super+C / Super+V / Super+X | Universal copy / paste / cut (stock) |
+
+The Alt/Win Command swap is keyboard options, not a bind, so it does not get its own Super+K row. Super in that menu is already the remapped Command key.
+
 ## Unapply
 
 ```bash

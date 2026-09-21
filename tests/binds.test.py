@@ -14,6 +14,11 @@ needles = [
     'app_shortcut("CTRL", "A")',
     'app_shortcut("CTRL", "Z")',
     'app_shortcut("CTRL SHIFT", "Z")',
+    "Universal select all",
+    "Universal undo",
+    "Universal redo",
+    "Hide window (scratchpad)",
+    "Quit window",
 ]
 missing = [s for s in needles if s not in lua]
 if missing:

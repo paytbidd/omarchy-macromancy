@@ -42,15 +42,17 @@ local function app_shortcut(mods, key)
   end
 end
 
-o.bind("SUPER + A", "Select all", app_shortcut("CTRL", "A"))
-o.bind("SUPER + Z", "Undo", app_shortcut("CTRL", "Z"))
-o.bind("SUPER + SHIFT + Z", "Redo", app_shortcut("CTRL SHIFT", "Z"))
+-- Descriptions are Super+K labels. "Universal …" matches stock copy/paste/cut
+-- so those rows sit together in the keybindings menu.
+o.bind("SUPER + A", "Universal select all", app_shortcut("CTRL", "A"))
+o.bind("SUPER + Z", "Universal undo", app_shortcut("CTRL", "Z"))
+o.bind("SUPER + SHIFT + Z", "Universal redo", app_shortcut("CTRL SHIFT", "Z"))
 
 -- Hide is Cmd+H: stash the window, keep it running. Super+S still shows
 -- the scratchpad. Super+Alt+S remains the same move. Quit is Cmd+Q:
 -- close the window (Apple Music Mini can keep Super+W as hide-instead).
-o.bind("SUPER + H", "Hide window", hl.dsp.window.move({
+o.bind("SUPER + H", "Hide window (scratchpad)", hl.dsp.window.move({
   workspace = "special:scratchpad",
   follow = false,
 }))
-o.bind("SUPER + Q", "Quit", hl.dsp.window.close())
+o.bind("SUPER + Q", "Quit window", hl.dsp.window.close())
