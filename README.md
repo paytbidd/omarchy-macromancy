@@ -14,14 +14,6 @@ This is not a full macOS shortcut table. Save, Find, New Tab, and Spotlight stay
 
 ## Install
 
-One shot:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/paytbidd/omarchy-macromancy/main/install | bash
-```
-
-Or:
-
 ```bash
 omarchy plugin add https://github.com/paytbidd/omarchy-macromancy.git --yes --enable
 ~/.config/omarchy/plugins/payton.macromancy/scripts/omarchy-macromancy apply
@@ -81,10 +73,10 @@ The Alt/Win Command swap is keyboard options, not a bind, so it does not get its
 Remove the plugin too:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/paytbidd/omarchy-macromancy/main/uninstall | bash
+omarchy plugin remove payton.macromancy
 ```
 
-or:
+or unapply and remove in one step:
 
 ```bash
 ~/.config/omarchy/plugins/payton.macromancy/scripts/omarchy-macromancy unapply --purge
